@@ -36,6 +36,17 @@ Please refer to the readme of the relevant plugin subproject
 ## Installation
 The libraries are published to the packages in this repository ➜
 ```kotlin
+
+repositories {
+   maven {
+        url = uri("https://maven.pkg.github.com/flaxoos/flax-gradle-plugins")
+        credentials {
+            username = $your-user
+            password = "GIRHUB_TOKEN"
+        }
+    }
+}
+
 dependencies {
     implementation("io.github.flaxoos:ktor-server-kafka:$ktor_plugins_version")
     implementation("io.github.flaxoos:ktor-server-rate-limiting:$ktor_plugins_version")
