@@ -60,6 +60,9 @@ avro = "1.11.2"
 kreds = "0.9.0"
 redis-mp-client = "0.0.1-SNAPSHOT"
 
+# Cloud
+eureka = "1.10.18"
+
 # Documentation
 dokka = "1.9.10"
 
@@ -146,6 +149,10 @@ kafka-schema-registry-client = { module = "io.confluent:kafka-schema-registry-cl
 kafka-avro-serializer = { module = "io.confluent:kafka-avro-serializer", version.ref = "confluent" }
 avro4k-core = { module = "com.sksamuel.avro4k:avro4k-core", version.ref = "avro4k" }
 avro-tools = { module = "org.apache.avro:avro-tools", version.ref = "avro" }
+
+# Cloud
+eureka-client = { module = "com.netflix.eureka:eureka-server", version.ref = "eureka"}
+eureka-server = { module = "com.netflix.eureka:eureka-client", version.ref = "eureka"}
 
 # Code Quality and Coverage plugins
 ktlint-gradlePlugin = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint" }
