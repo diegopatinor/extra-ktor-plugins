@@ -20,6 +20,9 @@ postgres = "42.6.0"
 exposed = "0.44.0"
 mongodb = "4.11.0"
 
+# AWS
+aws-java-sdk = "1.12.595"
+
 # Logging
 logback = "1.4.11"
 kotlin-logging = "5.1.0"
@@ -33,8 +36,7 @@ kotlinx-coroutines = "1.7.1"
 kotest = "5.6.2"
 kotest-test-containers = "2.0.2"
 mockk = "1.11.0"
-mockative = "2.0.1"
-kmock = "0.3.0-rc08"
+kotlin-wiremock = "2.1.1"
 testcontainers = "1.19.0"
 redis-testcontainers = "1.6.4"
 
@@ -107,6 +109,8 @@ ktor-server-test-host = { module = "io.ktor:ktor-server-test-host", version.ref 
 
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-jetty = { module = "io.ktor:ktor-client-jetty", version.ref = "ktor" }
+ktor-client-apache = { module = "io.ktor:ktor-client-apache", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 ktor-client-contentNegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 
@@ -123,6 +127,9 @@ exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datet
 mongodb-driver-kotlin-coroutine = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb" }
 mongodb-bson-kotlinx = { module = "org.mongodb:bson-kotlinx", version.ref = "mongodb" }
 
+# AWS
+aws-java-sdk-core = { module = "com.amazonaws:aws-java-sdk-core", version.ref = "aws-java-sdk" }
+
 # Testing libraries
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
@@ -131,12 +138,12 @@ kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.
 kotest-framework-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-agent-jvm = { module = "io.mockk:mockk-agent-jvm", version.ref = "mockk" }
-mockative = { module = "io.mockative:mockative", version.ref = "mockative" }
-mockative-processor = { module = "io.mockative:mockative-processor", version.ref = "mockative" }
+wiremock = { module = "com.marcinziolo:kotlin-wiremock", version.ref = "kotlin-wiremock" }
 kotest-extensions-testcontainers = { module = "io.kotest.extensions:kotest-extensions-testcontainers", version.ref = "kotest-test-containers" }
 kotest-extensions-testcontainers-kafka = { module = "io.kotest.extensions:kotest-extensions-testcontainers-kafka", version.ref = "kotest-test-containers" }
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
+testcontainers-localstack = { module = "org.testcontainers:localstack", version.ref = "testcontainers" }
 testcontainers-kafka = { module = "org.testcontainers:kafka", version.ref = "testcontainers" }
 testcontainers-redis = { module = "com.redis.testcontainers:testcontainers-redis", version.ref = "redis-testcontainers" }
 testcontainers-mongodb = { module = "org.testcontainers:mongodb", version.ref = "testcontainers" }
@@ -151,8 +158,11 @@ avro4k-core = { module = "com.sksamuel.avro4k:avro4k-core", version.ref = "avro4
 avro-tools = { module = "org.apache.avro:avro-tools", version.ref = "avro" }
 
 # Cloud
-eureka-client = { module = "com.netflix.eureka:eureka-server", version.ref = "eureka"}
-eureka-server = { module = "com.netflix.eureka:eureka-client", version.ref = "eureka"}
+eureka-client = { module = "com.netflix.eureka:eureka-client", version.ref = "eureka" }
+eureka-client-archaius2 = { module = "com.netflix.eureka:eureka-client-archaius2", version.ref = "eureka" }
+eureka-server = { module = "com.netflix.eureka:eureka-server", version.ref = "eureka" }
+eureka-server-governator = { module = "com.netflix.eureka:eureka-server-governator", version.ref = "eureka" }
+eureka-examples = { module = "com.netflix.eureka:eureka-examples", version.ref = "eureka" }
 
 # Code Quality and Coverage plugins
 ktlint-gradlePlugin = { module = "org.jlleitschuh.gradle:ktlint-gradle", version.ref = "ktlint" }
@@ -174,14 +184,6 @@ kotestFrameworkMultiplatform-gradlePlugin = { module = "io.kotest:kotest-framewo
 
 # Documentation
 dokka-gradlePlugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
-
-# Ksp
-ksp-gradlePlugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-ksp-symbolProcessing-api = { module = "com.google.devtools.ksp:symbol-processing-api", version.ref = "ksp" }
-
-# Kmock
-kmock = { module = "tech.antibytes.kmock:kmock", version.ref = "kmock" }
-kmock-gradlePlugin = { module = "tech.antibytes.kmock:kmock-gradle", version.ref = "kmock" }
 
 # Android
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android" }
@@ -219,12 +221,6 @@ atomicfu = { id = "kotlinx-atomicfu", version.ref = "atomicFu" }
 
 # Testing
 kotest = { id = "io.kotest.multiplatform", version.ref = "kotest" }
-
-# Ksp
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-
-# Kmock
-kmock = { id = "tech.antibytes.kmock.kmock-gradle", version.ref = "kmock" }
 
 # Github
 gradle-release = { id = "net.researchgate.release", version.ref = "gradle-release" }

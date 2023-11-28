@@ -1,59 +1,62 @@
 package io.github.flaxoos.cloud.discovery
 
+import io.github.flaxoos.cloud.discovery.DiscoveryContext.Companion.DiscoveryContextAttributeKey
+import io.ktor.client.HttpClientConfig
+import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationPlugin
 import io.ktor.server.application.ApplicationStarted
 import io.ktor.server.application.ApplicationStarting
 import io.ktor.server.application.ApplicationStopped
 import io.ktor.server.application.ApplicationStopping
 import io.ktor.server.application.createApplicationPlugin
 import io.ktor.server.application.hooks.MonitoringEvent
-import io.ktor.server.application.log
-import io.ktor.util.AttributeKey
 
 @DslMarker
-annotation class ServiceDiscoveryDsl
+public annotation class ServiceDiscoveryDsl
 
 @ServiceDiscoveryDsl
-class ServiceDiscoveryConfiguration {
-    lateinit var provider: ServiceDiscoveryProvider
-    var type: ServiceDiscoveryServiceType = ServiceDiscoveryServiceType.Undefined
-}
-
-sealed interface ServiceDiscoveryServiceType {
-    data object Undefined : ServiceDiscoveryServiceType
-    data object Server : ServiceDiscoveryServiceType
-    data class Client(val serviceName: String) : ServiceDiscoveryServiceType
-}
-
-val ServiceDiscovery = createApplicationPlugin("ServiceDiscovery", ::ServiceDiscoveryConfiguration) {
-
-    application.attributes.put(ServiceDiscoveryProviderAttributeKey, this.pluginConfig.provider)
-
-    on(MonitoringEvent(ApplicationStarting)) { application ->
-        val type = pluginConfig.type
-        if (type is ServiceDiscoveryServiceType.Client) {
-            val serviceId = this.pluginConfig.provider.serviceStarting(type.serviceName)
-            application.attributes.put(ServiceIdAttributeKey, serviceId)
-        }
+public open class ServiceDiscoveryConfiguration {
+    public lateinit var contextConfiguration: DiscoveryContextConfiguration
+    public var type: ServiceDiscoveryServiceType = ServiceDiscoveryServiceType.Undefined
+    private var httpClientConfig: HttpClientConfig<*>.() -> Unit = {}
+    public fun client(config: HttpClientConfig<*>.() -> Unit) {
+        httpClientConfig = config
     }
 
-    on(MonitoringEvent(ApplicationStarted)) { application ->
-        if (pluginConfig.type is ServiceDiscoveryServiceType.Client) {
-            this.pluginConfig.provider.serviceStarted(application.attributes[ServiceIdAttributeKey])
-        }
-    }
-
-    on(MonitoringEvent(ApplicationStopping)) { application ->
-        if (pluginConfig.type is ServiceDiscoveryServiceType.Client) {
-            this.pluginConfig.provider.serviceStopping(application.attributes[ServiceIdAttributeKey])
-        }
-    }
-
-    on(MonitoringEvent(ApplicationStopped)) { application ->
-        if (pluginConfig.type is ServiceDiscoveryServiceType.Client) {
-            this.pluginConfig.provider.serviceStopped(application.attributes[ServiceIdAttributeKey])
-        }
+    @ServiceDiscoveryDsl
+    public abstract class DiscoveryContextConfiguration {
+        public abstract fun provideContext(
+            application: Application,
+            httpClientConfig: HttpClientConfig<*>.() -> Unit = {}
+        ): DiscoveryContext<*>
     }
 }
 
-internal val ServiceIdAttributeKey = AttributeKey<ServiceId>("ServiceId")
-internal val ServiceDiscoveryProviderAttributeKey = AttributeKey<ServiceDiscoveryProvider>("ServiceDiscoveryProvider")
+public sealed interface ServiceDiscoveryServiceType {
+    public data object Undefined : ServiceDiscoveryServiceType
+    public data object Server : ServiceDiscoveryServiceType
+    public data class Client(val serviceName: String) : ServiceDiscoveryServiceType
+}
+
+public val ServiceDiscovery: ApplicationPlugin<ServiceDiscoveryConfiguration> =
+    createApplicationPlugin("ServiceDiscovery", ::ServiceDiscoveryConfiguration) {
+
+        val context = this.pluginConfig.contextConfiguration.provideContext(application)
+        application.attributes.put(DiscoveryContextAttributeKey, context)
+
+        on(MonitoringEvent(ApplicationStarting)) {
+            context.start()
+        }
+
+        on(MonitoringEvent(ApplicationStarted)) {
+            context.afterStarted()
+        }
+
+        on(MonitoringEvent(ApplicationStopping)) {
+            context.afterStopped()
+        }
+
+        on(MonitoringEvent(ApplicationStopped)) {
+            context.stop()
+        }
+    }
