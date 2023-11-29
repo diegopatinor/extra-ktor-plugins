@@ -158,9 +158,9 @@ avro4k-core = { module = "com.sksamuel.avro4k:avro4k-core", version.ref = "avro4
 avro-tools = { module = "org.apache.avro:avro-tools", version.ref = "avro" }
 
 # Cloud
+eureka-core = { module = "com.netflix.eureka:eureka-core", version.ref = "eureka" }
 eureka-client = { module = "com.netflix.eureka:eureka-client", version.ref = "eureka" }
 eureka-client-archaius2 = { module = "com.netflix.eureka:eureka-client-archaius2", version.ref = "eureka" }
-eureka-server = { module = "com.netflix.eureka:eureka-server", version.ref = "eureka" }
 eureka-server-governator = { module = "com.netflix.eureka:eureka-server-governator", version.ref = "eureka" }
 eureka-examples = { module = "com.netflix.eureka:eureka-examples", version.ref = "eureka" }
 

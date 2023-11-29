@@ -3,6 +3,8 @@ package io.github.flaxoos.discovery.eureka
 import io.github.flaxoos.cloud.discovery.DiscoveryContext
 import io.github.flaxoos.cloud.discovery.ServiceDiscoveryConfiguration
 import io.github.flaxoos.cloud.discovery.ServiceDiscoveryDsl
+import io.github.flaxoos.discovery.eureka.config.EurekaClientConfiguration
+import io.github.flaxoos.discovery.eureka.config.EurekaInstanceConfiguration
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.cio.CIO

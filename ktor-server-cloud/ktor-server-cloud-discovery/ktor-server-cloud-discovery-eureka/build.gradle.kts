@@ -15,10 +15,8 @@ kotlin {
             implementation(projects.ktorServerCloud.ktorServerCloudDiscovery.ktorServerCloudDiscoveryCore)
         }
         jvmMainDependencies {
-            implementation(libs.eureka.server)
-            implementation(libs.eureka.server.governator)
+            implementation(libs.eureka.core)
             implementation(libs.eureka.client)
-            implementation(libs.eureka.client.archaius2)
             implementation(libs.aws.java.sdk.core)
         }
         jvmTestDependencies {

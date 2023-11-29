@@ -1,7 +1,5 @@
 package io.github.flaxoos.discovery.eureka
 
-import com.amazonaws.metrics.AwsSdkMetrics.setRegion
-import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.impl.HttpProcessors.client
 import com.netflix.appinfo.ApplicationInfoManager
 import com.netflix.appinfo.InstanceInfo
 import com.netflix.appinfo.MyDataCenterInstanceConfig
@@ -10,10 +8,10 @@ import com.netflix.discovery.DefaultEurekaClientConfig
 import com.netflix.discovery.DiscoveryClient
 import com.netflix.discovery.EurekaClient
 import com.netflix.discovery.internal.util.AmazonInfoUtils
-import com.netflix.discovery.shared.transport.EurekaTransportConfig
 import io.github.flaxoos.cloud.discovery.ServiceDiscovery
 import io.github.flaxoos.cloud.discovery.discovery
 import io.github.flaxoos.cloud.discovery.get
+import io.github.flaxoos.discovery.eureka.config.EurekaInstanceConfiguration
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.kotest.assertions.fail
 import io.kotest.assertions.withClue
@@ -44,7 +42,6 @@ import kotlinx.coroutines.withTimeoutOrNull
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
-import org.testcontainers.utility.MountableFile
 import java.time.Duration
 import kotlin.properties.Delegates
 import kotlin.time.Duration.Companion.milliseconds

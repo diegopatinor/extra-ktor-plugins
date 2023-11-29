@@ -13,6 +13,8 @@ import io.github.flaxoos.cloud.discovery.DiscoverableServiceName
 import io.github.flaxoos.cloud.discovery.DiscoverableServiceName.Companion.asDiscoverableServiceName
 import io.github.flaxoos.cloud.discovery.DiscoveryContext
 import io.github.flaxoos.cloud.discovery.exceptions.ApplicationNotUpException
+import io.github.flaxoos.discovery.eureka.config.EurekaClientConfiguration
+import io.github.flaxoos.discovery.eureka.config.EurekaInstanceConfiguration
 import io.ktor.client.HttpClient
 import io.ktor.http.Url
 import io.ktor.server.application.Application

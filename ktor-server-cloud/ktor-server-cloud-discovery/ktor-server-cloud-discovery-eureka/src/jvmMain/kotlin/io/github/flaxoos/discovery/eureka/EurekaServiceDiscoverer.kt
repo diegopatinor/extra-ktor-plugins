@@ -4,7 +4,6 @@ import com.netflix.appinfo.ApplicationInfoManager
 import com.netflix.appinfo.EurekaInstanceConfig
 import com.netflix.appinfo.InstanceInfo
 import com.netflix.appinfo.providers.EurekaConfigBasedInstanceInfoProvider
-import com.netflix.discovery.DefaultEurekaClientConfig
 import com.netflix.discovery.DiscoveryClient
 import com.netflix.discovery.EurekaClientConfig
 import com.netflix.discovery.shared.Application
@@ -14,7 +13,10 @@ import io.github.flaxoos.cloud.discovery.DiscoverableServiceId.Companion.asDisco
 import io.github.flaxoos.cloud.discovery.DiscoverableServiceInstanceId.Companion.asDiscoverableServiceInstanceId
 import io.github.flaxoos.cloud.discovery.DiscoverableServiceName.Companion.asDiscoverableServiceName
 import io.github.flaxoos.cloud.discovery.ServiceDiscoverer
-import io.github.flaxoos.discovery.eureka.EurekaClientConfiguration.Companion.readEurekaClientConfiguration
+import io.github.flaxoos.discovery.eureka.config.EurekaClientConfiguration
+import io.github.flaxoos.discovery.eureka.config.EurekaClientConfiguration.Companion.readEurekaClientConfiguration
+import io.github.flaxoos.discovery.eureka.config.EurekaInstanceConfiguration
+import io.github.flaxoos.discovery.eureka.config.readEurekaInstanceConfiguration
 import io.ktor.http.Url
 
 internal class EurekaServiceDiscoverer(
@@ -25,7 +27,7 @@ internal class EurekaServiceDiscoverer(
 ) : ServiceDiscoverer {
 
     private val clientConfig: EurekaClientConfig =
-        eurekaClientConfiguration ?: application.environment.config.readEurekaClientConfiguration()
+        eurekaClientConfiguration ?: application.environment.config.readEurekaClientConfiguration(namespace)
     private val instanceConfig: EurekaInstanceConfig =
         eurekaInstanceConfiguration ?: application.environment.config.readEurekaInstanceConfiguration(namespace)
     private val instanceInfo: InstanceInfo = EurekaConfigBasedInstanceInfoProvider(instanceConfig).get()

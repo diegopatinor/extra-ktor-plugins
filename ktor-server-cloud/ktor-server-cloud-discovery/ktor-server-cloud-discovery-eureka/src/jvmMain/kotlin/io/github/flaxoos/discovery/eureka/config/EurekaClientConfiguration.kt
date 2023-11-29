@@ -1,11 +1,10 @@
-package io.github.flaxoos.discovery.eureka
+package io.github.flaxoos.discovery.eureka.config
 
 import com.netflix.discovery.DefaultEurekaClientConfig
 import com.netflix.discovery.EurekaClientConfig
 import com.netflix.discovery.shared.transport.EurekaTransportConfig
 import io.ktor.server.config.ApplicationConfig
 
-@Suppress("PropertyName")
 public class EurekaClientConfiguration internal constructor(
     @get:JvmName("_namespace")
     public var namespace: String,
@@ -271,7 +270,7 @@ public class EurekaClientConfiguration internal constructor(
         transportConfig ?: delegate.transportConfig
 
     internal companion object {
-        internal fun ApplicationConfig.readEurekaClientConfiguration(namespace: String = "eureka"): EurekaClientConfiguration =
+        internal fun ApplicationConfig.readEurekaClientConfiguration(namespace: String): EurekaClientConfiguration =
             with(config(namespace)) {
                 EurekaClientConfiguration(
                     registryFetchIntervalSeconds = propertyOrNull("registryFetchIntervalSeconds")?.getString()
@@ -309,10 +308,10 @@ public class EurekaClientConfiguration internal constructor(
                     shouldDisableDelta = propertyOrNull("shouldDisableDelta")?.getString()?.toBoolean(),
                     fetchRegistryForRemoteRegions = propertyOrNull("fetchRegistryForRemoteRegions")?.getString(),
                     region = propertyOrNull("region")?.getString(),
-                    // Note: availabilityZones and eurekaServerServiceUrls might require special handling due to their types
                     eurekaServerServiceUrls = configOrNull("eurekaServerServiceUrls")?.toMap()
-                        ?.mapValues { it as List<String> },
-                    availabilityZones = configOrNull("availabilityZones")?.toMap()?.mapValues { it as List<String> },
+                        ?.mapValues { it.toString().split(",") },
+                    availabilityZones = configOrNull("availabilityZones")?.toMap()
+                        ?.mapValues { it.toString().split(",") },
                     shouldFilterOnlyUpInstances = propertyOrNull("shouldFilterOnlyUpInstances")?.getString()
                         ?.toBoolean(),
                     eurekaConnectionIdleTimeoutSeconds = propertyOrNull("eurekaConnectionIdleTimeoutSeconds")?.getString()
@@ -340,7 +339,3 @@ public class EurekaClientConfiguration internal constructor(
             }
     }
 }
-
-private fun ApplicationConfig.configOrNull(path: String) = runCatching { config(path) }.getOrNull()
-
-

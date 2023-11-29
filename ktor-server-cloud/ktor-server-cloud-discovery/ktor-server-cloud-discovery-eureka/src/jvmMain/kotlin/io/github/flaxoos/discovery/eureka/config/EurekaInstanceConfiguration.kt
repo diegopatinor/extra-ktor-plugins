@@ -1,4 +1,4 @@
-package io.github.flaxoos.discovery.eureka
+package io.github.flaxoos.discovery.eureka.config
 
 import com.netflix.appinfo.CloudInstanceConfig
 import com.netflix.appinfo.DataCenterInfo
@@ -121,7 +121,7 @@ public class EurekaInstanceConfiguration internal constructor(
 
 }
 
-internal fun ApplicationConfig.readEurekaInstanceConfiguration(namespace: String = "eureka"): EurekaInstanceConfiguration =
+internal fun ApplicationConfig.readEurekaInstanceConfiguration(namespace: String): EurekaInstanceConfiguration =
     with(config(namespace)) {
         EurekaInstanceConfiguration(
             instanceId = propertyOrNull("instanceId")?.getString(),
